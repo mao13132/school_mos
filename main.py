@@ -4,7 +4,6 @@ from datetime import datetime
 from src.browser.createbrowser import CreatBrowser
 from src.school.iter_requests import IterRequests
 from src.school.start_school import StartSchool
-from src.school.start_uchebnik import StartUchebnik
 
 
 def main():
@@ -15,8 +14,6 @@ def main():
         browser = CreatBrowser(dir_project)
 
         res_job = StartSchool(browser.driver).start_school()
-
-        res_job = StartUchebnik(browser.driver).start_uchebnik()
 
         res_iter_requests = IterRequests(browser.driver, dir_project).start_iter()
 

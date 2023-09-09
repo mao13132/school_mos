@@ -4,6 +4,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from selenium.webdriver.common.action_chains import ActionChains
+
 from selenium.webdriver.common.by import By
 
 from src.school.load_page import LoadPage
@@ -105,11 +107,25 @@ class JobPost:
                 continue
 
     def show_row(self, row):
+
         try:
-            row.find_element(by=By.XPATH,
-                             value=f".//button").click()
+            elem_button = row.find_element(by=By.XPATH,
+                                           value=f".//button")
         except:
             return False
+
+
+        try:
+            elem_button.click()
+        except:
+            pass
+
+        try:
+            ActionChains(self.driver).move_to_element(elem_button).perform()
+        except:
+            pass
+
+        time.sleep(2)
 
         return True
 
@@ -144,15 +160,23 @@ class JobPost:
 
     def get_value_by_obe_to_one(self, row):
         try:
-            elements = row.find_element(by=By.XPATH,
-                                        value=f".//*[contains(@class, 'MuiCollapse-wrapper')]"
-                                              f"//*[contains(@class, 'MuiCollapse-vertical')]")
+            # elements = row.find_element(by=By.XPATH,
+            #                             value=f".//*[contains(@class, 'MuiCollapse-wrapper')]"
+            #                                   f"//*[contains(@class, 'MuiCollapse-vertical')]")
+
+            elem_button = row.find_elements(by=By.XPATH,
+                                            value=f".//*[contains(@class, 'MuiPaper-elevation')]")
+
+            ActionChains(self.driver).move_to_element(elem_button[-1]).perform()
 
 
         except:
             return ''
 
-        return elements.screenshot_as_base64
+
+
+        return row.screenshot_as_base64
+        # return elem_button[-1].screenshot_as_base64
 
     def get_type_row(self, row):
         try:
@@ -187,6 +211,8 @@ class JobPost:
                 print(f'Строка {count + 1} не раскрылась')
                 continue
 
+            time.sleep(1)
+
             _keys = self.get_keys_text_by_row(row)
 
             _value = self.get_response_row(row)
@@ -195,8 +221,6 @@ class JobPost:
                 continue
 
             self.good_job[_keys] = _value
-
-            print()
 
         return True
 
@@ -222,6 +246,8 @@ class JobPost:
 
         res_iter = self.iter_rows(list_rows)
 
-        print()
+        self.driver.close()
+
+        self.driver.switch_to.window(self.driver.window_handles[0])
 
         return self.good_job

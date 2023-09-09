@@ -1,4 +1,7 @@
+import os
 import time
+from datetime import datetime
+from json import dump, dumps
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -8,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from settings import LOGIN, PASSWORD, REQUESTS_LIST
 from src.school.job_post import JobPost
 from src.school.load_page import LoadPage
+from src.school.start_uchebnik import StartUchebnik
 
 
 class IterRequests:
@@ -97,15 +101,29 @@ class IterRequests:
 
             try:
                 self.driver.find_element(by=By.XPATH,
-                                          value=f"//*[contains(@class, 'contextContainer')]//button")
+                                         value=f"//*[contains(@class, 'contextContainer')]//button")
 
                 return True
             except:
                 time.sleep(1)
                 continue
 
+    def save_to_json(self, good_dict):
+        try:
+            file_name = os.path.join(self.dir_project, 'good', f'{datetime.now().strftime("%Y.%m.%d %H.%M.%S")}.json')
+
+            with open(file_name, 'w', encoding='utf-8') as file:
+                dump(good_dict, file, indent=4, ensure_ascii=False)
+        except:
+            return False
+
+        return True
+
     def iter_requests(self):
         for _req in REQUESTS_LIST:
+
+            res_job = StartUchebnik(self.driver).start_uchebnik()
+
             res_write = self.write_request(_req)
 
             time.sleep(1)
@@ -119,12 +137,12 @@ class IterRequests:
 
             res_load = self.loop_check_load()
 
-            if not  res_load:
+            if not res_load:
                 return False
 
             good_dict = JobPost(self.driver).start_job_post(_req)
 
-            print()
+            res_save = self.save_to_json(good_dict)
 
         return True
 

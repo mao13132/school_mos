@@ -44,6 +44,8 @@ class CreatBrowser:
 
         options.add_argument("--disable-gpu")
 
+        options.add_argument("--headless")
+
         self.driver = webdriver.Chrome(service=s, options=options)
 
         try:

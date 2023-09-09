@@ -21,6 +21,16 @@ class StartUchebnik:
 
         return True
 
+    def check_set_tests(self):
+        try:
+            self.driver.find_element(by=By.XPATH,
+                                     value=f"//*[contains(@class, 'checkboxIconCheckChecked')]//parent::label")
+
+        except:
+            return False
+
+        return True
+
     def check_load_filter(self):
 
         count = 0
@@ -76,10 +86,13 @@ class StartUchebnik:
 
         print(f'Успешно зашёл на сайт uchebnik')
 
-        res_click = self.click_test()
+        check_active_test = self.check_set_tests()
 
-        if not res_click:
-            return False
+        if not check_active_test:
+            res_click = self.click_test()
+
+            # if not res_click:
+            #     return False
 
         if not self.check_load_filter():
             return False
