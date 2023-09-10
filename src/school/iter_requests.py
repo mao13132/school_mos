@@ -1,14 +1,14 @@
 import os
 import time
 from datetime import datetime
-from json import dump, dumps
+from json import dump
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from settings import LOGIN, PASSWORD, REQUESTS_LIST
+from settings import REQUESTS_LIST
 from src.school.job_post import JobPost
 from src.school.load_page import LoadPage
 from src.school.start_uchebnik import StartUchebnik
@@ -117,7 +117,7 @@ class IterRequests:
         except:
             return False
 
-        return True
+        return file_name
 
     def iter_requests(self):
         for _req in REQUESTS_LIST:
@@ -144,9 +144,12 @@ class IterRequests:
 
             res_save = self.save_to_json(good_dict)
 
+            print(f'Сохранил результат обработки запроса "{_req}" в файл {res_save}')
+
         return True
 
     def start_iter(self):
+
         res_iter = self.iter_requests()
 
         return True

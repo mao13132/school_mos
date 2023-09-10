@@ -16,12 +16,6 @@ class CreatBrowser:
 
         if platform_to_os == "Linux":
 
-            from xvfbwrapper import Xvfb
-
-            vdisplay = Xvfb(width=1280, height=720)
-
-            vdisplay.start()
-
             binary = self.get_chrome()
 
             options.binary_location = binary

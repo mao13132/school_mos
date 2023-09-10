@@ -52,7 +52,7 @@ class JobPost:
 
         count = 0
 
-        count_try = 3
+        count_try = 5
 
         while True:
 
@@ -68,7 +68,7 @@ class JobPost:
                 if _rows != []:
                     return _rows
 
-                time.sleep(1)
+                time.sleep(2)
 
                 continue
             except:
@@ -114,7 +114,6 @@ class JobPost:
         except:
             return False
 
-
         try:
             elem_button.click()
         except:
@@ -147,6 +146,18 @@ class JobPost:
 
         return elements
 
+    def get_value_by_bonus(self, row):
+        try:
+            elements = row.find_element(by=By.XPATH,
+                                        value=f".//*[contains(@class, 'MuiOutlinedInput')]"
+                                              f"/input").get_attribute(
+                'value')
+
+        except:
+            return ''
+
+        return elements
+
     def get_value_by_show_rows(self, row):
         try:
             elements = row.find_element(by=By.XPATH,
@@ -160,23 +171,15 @@ class JobPost:
 
     def get_value_by_obe_to_one(self, row):
         try:
-            # elements = row.find_element(by=By.XPATH,
-            #                             value=f".//*[contains(@class, 'MuiCollapse-wrapper')]"
-            #                                   f"//*[contains(@class, 'MuiCollapse-vertical')]")
-
             elem_button = row.find_elements(by=By.XPATH,
                                             value=f".//*[contains(@class, 'MuiPaper-elevation')]")
 
             ActionChains(self.driver).move_to_element(elem_button[-1]).perform()
 
-
         except:
             return ''
 
-
-
         return row.screenshot_as_base64
-        # return elem_button[-1].screenshot_as_base64
 
     def get_type_row(self, row):
         try:
@@ -197,21 +200,24 @@ class JobPost:
             value = self.get_value_by_show_rows(row)
         elif type_row == 'Один к одному':
             value = self.get_value_by_obe_to_one(row)
+        elif type_row == 'Ввод числа':
+            value = self.get_value_by_bonus(row)
+        elif type_row == 'Одиночный ввод':
+            value = self.get_value_by_bonus(row)
         else:
-            print(f'Не смог определить тип строки')
-            value = ''
+            # print(f'Не задан шаблон работы с типом строки: "{type_row}" - сохраняю как картинку')
+            value = self.get_value_by_obe_to_one(row)
 
         return value
 
     def iter_rows(self, list_rows):
+
         for count, row in enumerate(list_rows):
             res_show = self.show_row(row)
 
             if not res_show:
                 print(f'Строка {count + 1} не раскрылась')
                 continue
-
-            time.sleep(1)
 
             _keys = self.get_keys_text_by_row(row)
 
@@ -243,6 +249,8 @@ class JobPost:
 
         if not list_rows:
             return False
+
+        print(f'Обрабатываю строчки с "{_req}"')
 
         res_iter = self.iter_rows(list_rows)
 

@@ -20,10 +20,10 @@ def main():
     finally:
         browser.driver.quit()
 
-    print()
-
-
-print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} BoosterSeo: начал работу')
 
 if __name__ == '__main__':
+    print(f'\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} начал работу')
+
     main()
+
+    print(f'\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} закончил работу')
