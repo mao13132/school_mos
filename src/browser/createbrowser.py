@@ -16,6 +16,12 @@ class CreatBrowser:
 
         if platform_to_os == "Linux":
 
+            from xvfbwrapper import Xvfb
+
+            vdisplay = Xvfb(width=1280, height=720)
+
+            vdisplay.start()
+
             binary = self.get_chrome()
 
             options.binary_location = binary
@@ -27,7 +33,7 @@ class CreatBrowser:
 
             s = Service(executable_path=f"{dir_project}\\src\\browser\\chromedriver.exe")
 
-        options.add_argument("no-sandbox")
+        options.add_argument("--no-sandbox")
 
         options.add_argument(
             "--disable-application-cache")
@@ -35,6 +41,8 @@ class CreatBrowser:
         options.add_argument("window-size=1280,720")
 
         options.add_argument("--dns-prefetch-disable")
+
+        options.add_argument('--disable-dev-shm-usage')
 
         options.add_argument("--disable-gpu")
 

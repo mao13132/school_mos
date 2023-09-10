@@ -1,6 +1,5 @@
 import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 
 from src.school.load_page import LoadPage
 
@@ -131,6 +130,9 @@ class JobCabinet:
                 url = 'https://uchebnik.mos.ru/catalogue'
 
                 res_load = LoadPage(self.driver, url).loop_load_page("//*[contains(text(), 'Тесты')]")
+
+                if not res_load:
+                    continue
 
             return True
 

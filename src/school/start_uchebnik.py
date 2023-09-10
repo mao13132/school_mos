@@ -91,9 +91,6 @@ class StartUchebnik:
         if not check_active_test:
             res_click = self.click_test()
 
-            # if not res_click:
-            #     return False
-
         if not self.check_load_filter():
             return False
 

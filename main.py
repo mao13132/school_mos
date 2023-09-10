@@ -15,6 +15,9 @@ def main():
 
         res_job = StartSchool(browser.driver).start_school()
 
+        if not res_job:
+            return False
+
         res_iter_requests = IterRequests(browser.driver, dir_project).start_iter()
 
     finally:
@@ -24,6 +27,6 @@ def main():
 if __name__ == '__main__':
     print(f'\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} начал работу')
 
-    main()
+    res = main()
 
     print(f'\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} закончил работу')

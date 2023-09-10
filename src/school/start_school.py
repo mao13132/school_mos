@@ -14,10 +14,11 @@ class StartSchool:
 
     def check_good_auth(self, _xpatch):
         try:
-            WebDriverWait(self.driver, 60).until(
+            WebDriverWait(self.driver, 120).until(
                 EC.presence_of_element_located((By.XPATH, _xpatch)))
             return True
-        except:
+        except Exception as es:
+            print(f'Ошибка при ожидание окна "{_xpatch}" "{es}"')
             return False
 
     def click_in(self):
@@ -58,9 +59,11 @@ class StartSchool:
                                                  value=f"//*[contains(@class, 'system-main__form')]").get_attribute(
                     'style')
             except:
+                time.sleep(2)
                 continue
 
             if 'none' in value:
+                time.sleep(2)
                 continue
 
             return True
@@ -91,8 +94,13 @@ class StartSchool:
         if not res_click:
             return False
 
-        if not self.check_load_in():
+        res_loading = self.check_load_in()
+
+        if not res_loading:
+            print(f'Не загружается окно с вводом логина и пароля')
             return False
+
+        time.sleep(3)
 
         res_write_login = self.write_value(LOGIN, f"//input[@name='login']")
 
@@ -106,5 +114,9 @@ class StartSchool:
             return False
 
         res_auth = self.check_good_auth(f"//*[contains(@class, 'client-profile')]")
+
+        if not res_auth:
+            print(f'Не смог дождаться подтверждения о успешном логине')
+            return False
 
         return True

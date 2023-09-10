@@ -36,7 +36,7 @@ class LoadPage:
             count += 1
 
             if count >= count_over:
-                print(f'Не смог открыть {self.source_name}')
+                print(f'Не смог открыть "{_xpatch}"')
                 return False
 
             start_page = self.load_page(self.url)

@@ -152,4 +152,4 @@ class IterRequests:
 
         res_iter = self.iter_requests()
 
-        return True
+        return res_iter
